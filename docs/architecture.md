@@ -1,6 +1,6 @@
 # Architecture
 
-An application calls `Logger`. The logger builds one dictionary, filters it, and hands it to `SyncDelivery`. The delivery object calls the adapter. The adapter writes to a console stream or a file.
+An application calls `Logger`. The logger builds one dictionary, filters it, and hands it to `SyncDelivery`. The delivery object calls the adapter. The adapter writes to a console stream, a file, or an Azure Storage Queue.
 
 ```mermaid
 flowchart LR
@@ -22,7 +22,7 @@ flowchart LR
 | `context.py` | Metadata merge and correlation id |
 | `registry.py` | Destination name to adapter class |
 | `factory.py` | Adapter construction and `SyncDelivery` |
-| `adapters/` | Console, file, and shared file |
+| `adapters/` | Console, file, shared file, and Azure Storage Queue |
 
 The logger does not contain file paths, HTTP calls, or a chain of destination conditionals. It asks the registry for the class named by `destination`.
 

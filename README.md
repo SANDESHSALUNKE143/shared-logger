@@ -152,6 +152,7 @@ Environment names:
 | `console` | One JSON object per line. `destination_config.stream` is `auto` (default), `stdout`, or `stderr`. `auto` sends `ERROR` and `CRITICAL` to stderr and other levels to stdout. |
 | `file` | UTF-8 JSON Lines, append mode, parent directories created when permitted. |
 | `shared_file` | Same writer as `file`, aimed at a mounted path. |
+| `azure_queue` | One JSON message per event on an Azure Storage Queue that already exists. Install `shared-logger[azure]`. |
 
 File and shared-file settings:
 
@@ -164,6 +165,22 @@ File and shared-file settings:
 When the active file is already at least `rotation` bytes, the next write renames it with a UTC timestamp suffix and opens a new file. One event larger than the limit is still written. Retention deletes only files this adapter rotated. It does not delete the active file or unrelated names in the directory.
 
 `shared_file` does not add locking, leader election, or a durability guarantee beyond what the mount provides. Two processes appending to the same path can interleave lines. A successful return means the writer flushed its buffer, not that a network filesystem has committed the bytes.
+
+`azure_queue` settings:
+
+| Key | Required | Meaning |
+| --- | --- | --- |
+| `queue_name` | yes | Queue that already exists in the storage account. `shared-infra` uses `app-logs`. |
+| `connection_string` | one of these | Storage connection string. |
+| `connection_string_env` | one of these | Name of the environment variable that holds the connection string. |
+
+Set exactly one of `connection_string` or `connection_string_env`. `initialize` checks that the queue exists and does not create it. Each `write_*` call sends one message and returns when the queue accepts it. `flush` does not send another request. Applications do not get an Elasticsearch URL. The worker on the infra VM reads the queue.
+
+```bash
+SHARED_LOGGER_DESTINATION=azure_queue
+SHARED_LOGGER_DESTINATION_CONFIG={"queue_name":"app-logs","connection_string_env":"AZURE_STORAGE_CONNECTION_STRING"}
+AZURE_STORAGE_CONNECTION_STRING='DefaultEndpointsProtocol=https;AccountName=...;AccountKey=...;EndpointSuffix=core.windows.net'
+```
 
 Elasticsearch, OpenTelemetry, RabbitMQ, Azure Service Bus, Kafka, HTTP endpoints, object storage, and databases are not implemented. Selecting one of those names fails during initialization.
 

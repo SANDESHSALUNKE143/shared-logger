@@ -36,7 +36,7 @@ def get_adapter(name: str) -> type[LoggingAdapter]:
         known = ", ".join(sorted(_ADAPTERS)) or "(none)"
         raise ConfigurationError(
             f"Unknown destination {name!r}. Registered destinations: {known}. "
-            "This release implements console, file, and shared_file. "
+            "This release implements azure_queue, console, file, and shared_file. "
             "Unimplemented destinations are rejected during initialization."
         ) from None
 

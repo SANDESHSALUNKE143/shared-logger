@@ -19,7 +19,11 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+azure = [
+  "azure-storage-queue>=12.11,<13",
+]
 dev = [
+  "azure-storage-queue>=12.11,<13",
   "build>=1.2,<2",
   "pytest>=8,<9",
   "pytest-cov>=5,<7",

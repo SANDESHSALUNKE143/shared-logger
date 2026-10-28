@@ -43,6 +43,12 @@ The adapter uses a lock so threads in one process do not interleave JSON lines. 
 
 A relative path is still accepted so local tests can exercise the same code. Production configuration should pass the mounted absolute path.
 
+## Azure Storage Queue
+
+`AzureQueueAdapter` is destination `azure_queue`. Install `shared-logger[azure]`. `destination_config` takes `queue_name` and exactly one of `connection_string` or `connection_string_env`. `initialize` calls the queue and fails if it does not exist. `write` sends the event as one JSON message. `flush` does not send a second request. `close` can be called twice.
+
+The queue is the handoff to `shared-infra`. Applications do not open Elasticsearch.
+
 ## Not implemented
 
 Do not register empty adapters for Elasticsearch, OpenTelemetry, RabbitMQ, Azure Service Bus, Kafka, HTTP, object storage, or databases. `Logger.initialize` must fail with `ConfigurationError` when the name is unknown.

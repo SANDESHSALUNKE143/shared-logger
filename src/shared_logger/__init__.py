@@ -5,6 +5,7 @@ files or connect to external services. Call :meth:`Logger.initialize` before
 writing events.
 """
 
+from shared_logger.adapters.azure_queue import AzureQueueAdapter
 from shared_logger.adapters.base import LoggingAdapter
 from shared_logger.adapters.console import ConsoleAdapter
 from shared_logger.adapters.file import FileAdapter
@@ -20,6 +21,7 @@ from shared_logger.logger import Logger
 from shared_logger.registry import register_adapter
 
 __all__ = [
+    "AzureQueueAdapter",
     "ConfigurationError",
     "ConsoleAdapter",
     "DestinationError",

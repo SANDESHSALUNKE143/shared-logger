@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `azure_queue` sends one JSON event per call to an existing Azure Storage Queue. Install `shared-logger[azure]`.
+
 ## 0.1.0 - 2026-10-25
 
 Initial release.
